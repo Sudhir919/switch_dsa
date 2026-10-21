@@ -1,0 +1,70 @@
+
+// Using Recursion
+
+class Solution {
+public:
+    int solve(vector<int>& coins, int amount) {
+
+        // Base cases
+        if (amount == 0) return 0;
+        if (amount < 0) return 1e9;
+
+        int ans = 1e9;
+
+        // Try every coin
+        for (int coin : coins) {
+            int result = solve(coins, amount - coin);
+
+            ans = min(ans, 1 + result);
+        }
+
+        return ans;
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+
+        int ans = solve(coins, amount);
+
+        return ans >= 1e9 ? -1 : ans;
+    }
+};
+
+
+//******************** DP (Memorization) *******************
+
+class Solution {
+public:
+    int solve(vector<int>& coins, int amount,
+              vector<int>& dp) {
+
+        // Base cases
+        if (amount == 0) return 0;
+        if (amount < 0) return 1e9;
+
+        // Already calculated
+        if (dp[amount] != -1) {
+            return dp[amount];
+        }
+
+        int ans = 1e9;
+
+        for (int coin : coins) {
+            int result = solve(coins, amount - coin, dp);
+
+            ans = min(ans, 1 + result);
+        }
+
+        return dp[amount] = ans;
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+
+        vector<int> dp(amount + 1, -1);
+
+        int ans = solve(coins, amount, dp);
+
+        return ans >= 1e9 ? -1 : ans;
+    }
+};
+
+
